@@ -1,41 +1,61 @@
-# REST: Toward Robust and Harmonious Adaptation for Cross-modal Retrieval
+<h1 align="center">REST</h1>
 
-Official code for **Toward Robust and Harmonious Adaptation for Cross-modal Retrieval** by Haobin Li, Zhuqi Liu, Mouxing Yang, and Xi Peng. REST continues our [ICLR 2025 TCR release](https://hbinli.github.io/TCR/). [[Paper]](https://doi.org/10.1109/TPAMI.2026.3729221)
+<p align="center"><strong>Toward Robust and Harmonious Adaptation for Cross-modal Retrieval</strong></p>
 
-## Query shift
+<p align="center">Haobin Li · Zhuqi Liu · Mouxing Yang · Xi Peng</p>
 
-REST studies online query streams whose distribution changes over time. **Online Query Shift (OQS)** evaluates individual shifts; **Diverse Query Shift (DQS)** mixes shifts in one stream. The paper extends image–text retrieval to video–audio and composed image retrieval.
+<p align="center">
+  <a href="https://doi.org/10.1109/TPAMI.2026.3729221"><img src="https://img.shields.io/badge/IEEE%20TPAMI-2026-00629B?logo=ieee" alt="IEEE TPAMI 2026"></a>
+  <a href="https://doi.org/10.1109/TPAMI.2026.3729221"><img src="https://img.shields.io/badge/Paper-DOI-2563eb" alt="Paper DOI"></a>
+  <a href="https://drive.google.com/drive/folders/17QyJ9Y52XB67jektNvhUk6jKmIQnoatF?usp=drive_link"><img src="https://img.shields.io/badge/Google%20Drive-Datasets-34A853?logo=googledrive&logoColor=white" alt="Datasets"></a>
+  <a href="https://drive.google.com/drive/folders/1tVuNY9l520BY6SvDdzzmNhF_wCrIaUei?usp=drive_link"><img src="https://img.shields.io/badge/Google%20Drive-Weights-4285F4?logo=googledrive&logoColor=white" alt="Model weights"></a>
+  <a href="https://hbinli.github.io/TCR/"><img src="https://img.shields.io/badge/Prior%20work-TCR%20%7C%20ICLR%202025-8B5CF6" alt="TCR, ICLR 2025"></a>
+</p>
 
-<img src="figs/figure1.png" alt="Figure 1: online and diverse query shift" width="950">
+Official implementation of **REST**, published in *IEEE Transactions on Pattern Analysis and Machine Intelligence* (2026). This repository provides evaluation code for image–text, video–audio, and composed image retrieval.
 
-## Method
+## 🔍 Overview
 
-REST refines retrieval predictions, then adapts the query encoder with query uniformity, query–gallery gap, and query–gallery consistency losses. DQS adds gradient decoupling to preserve general retrieval knowledge.
+Cross-modal retrieval matches a query in one modality to relevant items in another. In practice, queries arrive online and may differ from the data used to train the model. REST studies two settings: **Online Query Shift (OQS)**, where queries face an individual shift, and **Diverse Query Shift (DQS)**, where different shifts appear in the same stream.
 
-The release keeps each original implementation's adaptation arithmetic and task defaults. In particular, CAV-MAE and SPRC use `1/(1+KL)` for the DQS gradient weight, while BLIP uses `exp(-KL)`; the paper writes the latter form in its summary.
+<p align="center"><img src="figs/figure1.png" alt="Online and diverse query shifts in cross-modal retrieval" width="900"></p>
 
-<img src="figs/method.png" alt="Figure 2: REST method" width="950">
+## 🧭 From TCR to REST
 
-## Benchmarks and code
+Our earlier work, [**TCR** (ICLR 2025)](https://hbinli.github.io/TCR/) ([paper](https://openreview.net/pdf?id=BmG88rONaU), [code](https://github.com/XLearning-SCU/2025-ICLR-TCR)), introduced test-time adaptation for image–text retrieval under query shift. **REST (IEEE TPAMI 2026)** extends this line of work to diverse query streams and a broader set of cross-modal retrieval tasks, including video–audio and composed image retrieval.
 
-| Task | Backbone | Datasets | Metric | Instructions |
+## 🧠 Method
+
+REST refines retrieval predictions and adapts the query encoder using objectives for query uniformity, query–gallery gap, and query–gallery consistency. For DQS, gradient decoupling helps preserve general retrieval knowledge while the model adapts to changing queries.
+
+<p align="center"><img src="figs/method.png" alt="Overview of the REST method" width="900"></p>
+
+## 📊 Benchmarks
+
+| Task | Backbone | Benchmarks | Main metrics | Instructions |
 | --- | --- | --- | --- | --- |
-| Image–text retrieval | BLIP | Flickr, COCO, Nocaps, Fashion-Gen, RSICD, RSITMD | TR@1 / IR@1 | [Image_Text_Retrieval](Image_Text_Retrieval/README.md) |
-| Video–audio retrieval | CAV-MAE | AudioSet-O/D, VGGSound | AR@1 / VR@1 | [Audio_Video_Retrieval](Audio_Video_Retrieval/README.md) |
-| Composed image retrieval | BLIP-2 | FIQ-O/D, CIRR-O/D | CIR@10 / CIR@1 | [Composed_Image_Retrieval](Composed_Image_Retrieval/README.md) |
+| Image–text | BLIP | Flickr, COCO, Nocaps, Fashion-Gen, RSICD, RSITMD | TR@1 / IR@1 | [Image–text guide](Image_Text_Retrieval/README.md) |
+| Video–audio | CAV-MAE | AudioSet-O/D, VGGSound | AR@1 / VR@1 | [Video–audio guide](Audio_Video_Retrieval/README.md) |
+| Composed image | BLIP-2 | FIQ-O/D, CIRR-O/D | Recall@10 / Recall@1 | [Composed image guide](Composed_Image_Retrieval/README.md) |
 
-`-O` and `-D` name the OQS and DQS benchmarks. The earlier TCR collection calls the individual Flickr and COCO corruptions `Flickr-C` and `COCO-C`; those are the Flickr-O and COCO-O data used here.
+`-O` and `-D` denote OQS and DQS benchmarks. The Flickr and COCO individual-corruption archives were previously released with TCR as `Flickr-C` and `COCO-C`; these provide the Flickr-O and COCO-O data used here.
 
-## Download
+## 📦 Data and checkpoints
 
-- [Datasets on Google Drive](https://drive.google.com/drive/folders/17QyJ9Y52XB67jektNvhUk6jKmIQnoatF?usp=drive_link)
-- [Model weights on Google Drive](https://drive.google.com/drive/folders/1tVuNY9l520BY6SvDdzzmNhF_wCrIaUei?usp=drive_link)
+Download the required archives from the [dataset collection](https://drive.google.com/drive/folders/17QyJ9Y52XB67jektNvhUk6jKmIQnoatF?usp=drive_link) and [weight collection](https://drive.google.com/drive/folders/1tVuNY9l520BY6SvDdzzmNhF_wCrIaUei?usp=drive_link). Each collection is organized into the same three task folders as this repository. Place extracted data and weights beside `code/`:
 
-Both collections have `Image_Text_Retrieval`, `Audio_Video_Retrieval`, and `Composed_Image_Retrieval` folders. Download the archives required by your task. Extract each dataset archive into the matching folder under `release/data/` and each model archive into the matching folder under `release/weight/`. Every archive includes its own top-level dataset or model directory. Extract an `-O` dataset before its `-D` partner because the `-D` package links shared clean files from `-O`. Each task README lists the extraction paths and checkpoints.
+```text
+release/
+├── code/          # this repository
+├── data/          # extracted datasets
+└── weight/        # extracted model checkpoints
+```
 
-## Environment
+Each archive includes its own top-level dataset or model directory. Extract an `-O` archive before its `-D` partner, because the `-D` package links shared clean files from `-O`. The task guides list the exact archives, extraction commands, and checkpoints.
 
-The code was checked in `/opt/conda/envs/tta` with Python 3.9.16, PyTorch 2.1.0, CUDA 12.1, and GPU FAISS 1.7.2. For a new environment:
+## ⚙️ Environment
+
+The release was checked with Python 3.9.16, PyTorch 2.1.0, CUDA 12.1, and GPU FAISS 1.7.2. From `release/code/`:
 
 ```bash
 conda create -n rest python=3.9.16 pip -y
@@ -45,21 +65,23 @@ python -m pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 \
 python -m pip install -r requirements.txt
 ```
 
-Run the commands in the task README from that task's directory. Put metrics, feature caches, and predictions outside `code/`, for example under `/tmp/rest_runs`. `REST_DATA_ROOT` can point to another data root with the same three task folders.
+BLIP and BLIP-2 use the Hugging Face `bert-base-uncased` tokenizer. The first run needs network access to download it. If it is already cached, offline runs can use `HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1`.
 
-BLIP and BLIP-2 use the Hugging Face `bert-base-uncased` tokenizer. The first run needs network access to download it; if it is already cached and the network is unavailable, prefix the command with `HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1`.
+## ▶️ Reproduce
 
-## Reproduce
+Choose a task guide for complete OQS, DQS, and cross-dataset commands:
 
-Each task README gives the required archives, checkpoint, and runnable commands for OQS, DQS, and cross-dataset evaluation:
+- [Image–text retrieval](Image_Text_Retrieval/README.md)
+- [Video–audio retrieval](Audio_Video_Retrieval/README.md)
+- [Composed image retrieval](Composed_Image_Retrieval/README.md)
 
-- [Image–text: Flickr/COCO and other targets](Image_Text_Retrieval/README.md)
-- [Video–audio: AudioSet and VGGSound](Audio_Video_Retrieval/README.md)
-- [Composed image: FashionIQ and CIRR](Composed_Image_Retrieval/README.md)
+Run each command from its task directory. Keep metrics, feature caches, and predictions outside `code/`, for example under `/tmp/rest_runs`. `REST_DATA_ROOT` can point to a different data root with the same task folders.
 
-The paper contains the full benchmark protocol and reported results. The source-code adaptation settings and task checkpoints are kept in the released configs and entrypoints.
+The released configs and entrypoints retain the original task-specific adaptation settings. In particular, the CAV-MAE and SPRC implementations use `1/(1+KL)` for the DQS gradient weight, while BLIP uses `exp(-KL)`; the paper summarizes the latter form. Use the task-specific implementation and checkpoint when comparing results with the paper.
 
-## Citation
+## 📝 Citation
+
+If you use REST, please cite the IEEE TPAMI paper:
 
 ```bibtex
 @article{li2026toward,
@@ -72,4 +94,6 @@ The paper contains the full benchmark protocol and reported results. The source-
 }
 ```
 
-The authors' code is under [Apache 2.0](LICENSE). Bundled LAVIS and CAV-MAE components retain their upstream BSD licenses in the corresponding task folders.
+## 📄 License
+
+The authors' code is released under [Apache 2.0](LICENSE). Bundled LAVIS and CAV-MAE components retain their upstream BSD licenses in the corresponding task folders.
