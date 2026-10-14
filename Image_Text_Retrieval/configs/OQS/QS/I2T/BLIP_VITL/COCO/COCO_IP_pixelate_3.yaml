@@ -1,0 +1,54 @@
+ # Copyright (c) 2022, salesforce.com, inc.
+ # All rights reserved.
+ # SPDX-License-Identifier: BSD-3-Clause
+ # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+
+image_root: '../../data/Image_Text_Retrieval/coco-IP/COCO_IP_pixelate_3'
+ann_root: '../../data/Image_Text_Retrieval/coco-TP/coco_annotations/'
+
+dataset: 'coco'
+
+baseline: 'blip_retrieval'
+
+backbone: 'blip'
+
+batch_size: 64
+init_lr: 0.0005
+
+model:
+  arch: blip_retrieval
+  load_finetuned: True
+
+  finetuned: "./weights/BLIP/model_large_retrieval_coco.pth"
+  # pretrained: "https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_capfilt_large.pth"
+
+  queue_size: 57600
+  alpha: 0.4
+
+  negative_all_rank: False
+
+  # vit encoder
+  vit_type: "large"
+  vit_grad_ckpt: True
+  vit_ckpt_layer: 10
+
+  image_size: 384
+
+  # bert config
+  med_config_path: "configs/models/med_large_config.json"
+
+  embed_dim: 256
+
+preprocess:
+  vis_processor:
+      train:
+        name: "blip_image_train"
+        image_size: 384
+      eval:
+        name: "blip_image_eval"
+        image_size: 384
+  text_processor:
+      train:
+        name: "blip_caption"
+      eval:
+        name: "blip_caption"
